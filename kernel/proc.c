@@ -288,9 +288,9 @@ fork(void)
     if(p->ofile[i])
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
-
+  
   safestrcpy(np->name, p->name, sizeof(p->name));
-
+  np->mask=p->mask;
   pid = np->pid;
 
   np->state = RUNNABLE;
@@ -691,5 +691,12 @@ procdump(void)
       state = "???";
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
+  }
+}
+void getprocinuse(uint64 *add){
+  int i;
+  *add=0;
+  for(i=0;i<NPROC;i++){
+    if(proc[i].state!=UNUSED)(*add)++;
   }
 }
