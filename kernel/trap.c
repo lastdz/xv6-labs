@@ -78,8 +78,17 @@ usertrap(void)
 
   // give up the CPU if this is a timer interrupt.
   if(which_dev == 2)
+  {
+    //printf("%p %d\n",p->alarm_handler,p->ticknum);
+    if(p->ticknum!=0&&p->hasalarm==0&&++p->tickcnt==p->ticknum){
+      p->hasalarm=1;
+        memmove(p->trapframe_user,p->trapframe,sizeof(struct trapframe));
+        p->tickcnt=0;
+        p->trapframe->epc=(uint64)p->alarm_handler;
+      }
     yield();
 
+  }
   usertrapret();
 }
 
