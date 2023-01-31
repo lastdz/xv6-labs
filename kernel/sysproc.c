@@ -43,12 +43,24 @@ sys_sbrk(void)
 {
   int addr;
   int n;
-
-  if(argint(0, &n) < 0)
-    return -1;
   addr = myproc()->sz;
-  if(growproc(n) < 0)
+  if(argint(0, &n) < 0){
     return -1;
+  }
+
+    if(n>=0){
+      myproc()->sz+=n;
+    }else if(myproc()->sz+n>0){
+      uint64 oldsz=myproc()->sz;
+      myproc()->sz+=n;
+      uvmunmap(myproc()->pagetable,PGROUNDUP(myproc()->sz),(PGROUNDUP(oldsz)-PGROUNDUP(myproc()->sz))/PGSIZE,1);
+      //addr=myproc()->sz;
+    }else{
+      return -1;
+    }
+  // if(growproc(n) < 0)
+  //   return -1;
+  
   return addr;
 }
 
