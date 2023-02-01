@@ -182,6 +182,10 @@ void            plic_complete(int);
 void            virtio_disk_init(void);
 void            virtio_disk_rw(struct buf *, int);
 void            virtio_disk_intr(void);
+int cowpage(pagetable_t pagetable, uint64 va);
+void* cowalloc(pagetable_t pagetable, uint64 va);
+int krefcnt(void* pa);
+int kaddrefcnt(void* pa);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
